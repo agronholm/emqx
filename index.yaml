@@ -1,0 +1,15 @@
+apiVersion: v1
+entries:
+  emqx:
+  - apiVersion: v2
+    appVersion: 5.0.7
+    created: "2022-09-02T13:33:30.97294963+03:00"
+    description: A Helm chart for EMQX
+    digest: c83e8a2e99d48dcf74269a2611b61b9645b1a05c3cabe24e6b701c3b4e61bc03
+    icon: https://github.com/emqx.png
+    name: emqx
+    type: application
+    urls:
+    - emqx-5.0.7.tgz
+    version: 5.0.7
+generated: "2022-09-02T13:33:30.969999463+03:00"
