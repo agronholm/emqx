@@ -1,4 +1,4 @@
-{{- if and (.Values.ssl.enable) (not .Values.ssl.useExisting) -}}
+{{- if and (.Values.ssl.enabled) (not .Values.ssl.useExisting) -}}
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
@@ -7,7 +7,7 @@ metadata:
 spec:
   secretName: {{ include "emqx.fullname" . }}-tls
   issuerRef:
-    name: {{ default "letsencrypt-staging" .Values.ssl.issuer.name }}
+    name: {{ default "letsencrypt-dns" .Values.ssl.issuer.name }}
     kind: {{ default "ClusterIssuer" .Values.ssl.issuer.kind }}
   dnsNames:
     {{- range .Values.ssl.dnsnames }}
