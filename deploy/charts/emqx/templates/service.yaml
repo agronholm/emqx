@@ -26,71 +26,67 @@ spec:
   {{- end }}
   {{- end }}
   ports:
+  {{- if .Values.service.mqtt }}
   - name: mqtt
-    port: {{ .Values.service.mqtt | default 1883 }}
+    port: {{ .Values.service.mqtt }}
     protocol: TCP
     targetPort: mqtt
-    {{- if and (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) (not (empty .Values.service.nodePorts.mqtt)) }}
+    {{- if and (eq .Values.service.type "NodePort") .Values.service.nodePorts.mqtt }}
     nodePort: {{ .Values.service.nodePorts.mqtt }}
-    {{- else if eq .Values.service.type "ClusterIP" }}
-    nodePort: null
     {{- end }}
-    {{- if not (empty .Values.emqxConfig.EMQX_LISTENERS__TCP__DEFAULT) }}
+  {{- end }}
+  {{- if and .Values.service.internalmqtt .Values.emqxConfig.EMQX_LISTENERS__TCP__DEFAULT }}
   - name: internalmqtt
-    port: {{ .Values.service.internalmqtt | default 11883 }}
+    port: {{ .Values.service.internalmqtt }}
     protocol: TCP
     targetPort: internalmqtt
-    {{- if and (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) (not (empty .Values.service.nodePorts.internalmqtt)) }}
+    {{- if and (eq .Values.service.type "NodePort") .Values.service.nodePorts.internalmqtt }}
     nodePort: {{ .Values.service.nodePorts.internalmqtt }}
-    {{- else if eq .Values.service.type "ClusterIP" }}
-    nodePort: null
     {{- end }}
-    {{ end }}
+  {{- end }}
+  {{- if .Values.service.mqttssl }}
   - name: mqttssl
-    port: {{ .Values.service.mqttssl | default 8883 }}
+    port: {{ .Values.service.mqttssl }}
     protocol: TCP
     targetPort: mqttssl
-    {{- if and (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) (not (empty .Values.service.nodePorts.mqttssl)) }}
+    {{- if and (eq .Values.service.type "NodePort") .Values.service.nodePorts.mqttssl }}
     nodePort: {{ .Values.service.nodePorts.mqttssl }}
-    {{- else if eq .Values.service.type "ClusterIP" }}
-    nodePort: null
     {{- end }}
+  {{- end }}
+  {{- if .Values.service.ws }}
   - name: ws
-    port: {{ .Values.service.ws | default 8083 }}
+    port: {{ .Values.service.ws }}
     protocol: TCP
     targetPort: ws
-    {{- if and (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) (not (empty .Values.service.nodePorts.ws)) }}
+    {{- if and (eq .Values.service.type "NodePort") .Values.service.nodePorts.ws }}
     nodePort: {{ .Values.service.nodePorts.ws }}
-    {{- else if eq .Values.service.type "ClusterIP" }}
-    nodePort: null
     {{- end }}
+  {{- end }}
+  {{- if .Values.service.wss }}
   - name: wss
-    port: {{ .Values.service.wss | default 8084 }}
+    port: {{ .Values.service.wss }}
     protocol: TCP
     targetPort: wss
-    {{- if and (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) (not (empty .Values.service.nodePorts.wss)) }}
+    {{- if and (eq .Values.service.type "NodePort") .Values.service.nodePorts.wss }}
     nodePort: {{ .Values.service.nodePorts.wss }}
-    {{- else if eq .Values.service.type "ClusterIP" }}
-    nodePort: null
     {{- end }}
+  {{- end }}
+  {{- if .Values.service.dashboard }}
   - name: dashboard
-    port: {{ .Values.service.dashboard | default 18083 }}
+    port: {{ .Values.service.dashboard }}
     protocol: TCP
     targetPort: dashboard
-    {{- if and (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) (not (empty .Values.service.nodePorts.dashboard)) }}
+    {{- if and (eq .Values.service.type "NodePort") .Values.service.nodePorts.dashboard }}
     nodePort: {{ .Values.service.nodePorts.dashboard }}
-    {{- else if eq .Values.service.type "ClusterIP" }}
-    nodePort: null
     {{- end }}
-  {{- if not (empty .Values.service.dashboardtls) }}
+  {{- end }}
+  {{- if .Values.service.dashboardtls }}
   - name: dashboardtls
     port: {{ .Values.service.dashboardtls }}
     protocol: TCP
     targetPort: dashboardtls
-    {{- if and (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) (not (empty .Values.service.nodePorts.dashboardtls)) }}
+    {{- if and (eq .Values.service.type "NodePort") .Values.service.nodePorts.dashboardtls }}
     nodePort: {{ .Values.service.nodePorts.dashboardtls }}
-    {{- else if eq .Values.service.type "ClusterIP" }}
-    nodePort: null
     {{- end }}
   {{- end }}
   selector:
@@ -115,7 +111,7 @@ spec:
   publishNotReadyAddresses: true
   ports:
   - name: mqtt
-    port: {{ .Values.service.mqtt | default 1883 }}
+    port: 1883
     protocol: TCP
     targetPort: mqtt
     {{- if not (empty .Values.emqxConfig.EMQX_LISTENERS__TCP__DEFAULT) }}
@@ -125,19 +121,19 @@ spec:
     targetPort: internalmqtt
     {{ end }}
   - name: mqttssl
-    port: {{ .Values.service.mqttssl | default 8883 }}
+    port: 8883
     protocol: TCP
     targetPort: mqttssl
   - name: ws
-    port: {{ .Values.service.ws | default 8083 }}
+    port: 8083
     protocol: TCP
     targetPort: ws
   - name: wss
-    port: {{ .Values.service.wss | default 8084 }}
+    port: 8084
     protocol: TCP
     targetPort: wss
   - name: dashboard
-    port: {{ .Values.service.dashboard | default 18083 }}
+    port: 18083
     protocol: TCP
     targetPort: dashboard
   - name: ekka
